@@ -1,17 +1,26 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+
 app.use(cors());
 
-// TA LINIA JEST KLUCZOWA - zabija stronę powitalną Rendera
-app.get('/', (req, res) => res.send({status: "OK", info: "YAGA LIVE"}));
-
+// TWOJA BAZA
 let licencje = { "START-YAGA": 1000 };
+
+// GŁÓWNA STRONA - Jeśli to zobaczysz w X-RAY, to wygrałeś
+app.get('/', (req, res) => {
+    res.send("YAGA_SERVER_IS_ACTIVE");
+});
 
 app.get('/check', (req, res) => {
     const key = req.query.key;
-    if (licencje[key]) res.json({ status: "OK", remaining: licencje[key] });
-    else res.json({ status: "ERROR" });
+    if (licencje[key]) {
+        // Nie odejmujemy punktu przy samym sprawdzaniu stanu
+        res.json({ status: "OK", remaining: licencje[key] });
+    } else {
+        res.json({ status: "ERROR" });
+    }
 });
 
-app.listen(process.env.PORT || 3000);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("Serwer ruszył na porcie " + PORT));
