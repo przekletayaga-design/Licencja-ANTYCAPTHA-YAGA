@@ -6,6 +6,11 @@ app.use(cors());
 
 let licencje = { "START-YAGA": 1000 };
 
+// Ta linia sprawi, że zamiast strony Rendera zobaczysz swój napis
+app.get('/', (req, res) => {
+    res.send("<h1>SERWER YAGA DZIALA</h1>");
+});
+
 app.get('/check', (req, res) => {
     const key = req.query.key;
     if (licencje[key]) {
@@ -16,8 +21,7 @@ app.get('/check', (req, res) => {
     }
 });
 
-// To musi być na samym końcu:
-app.get('*', (req, res) => res.send("Serwer dziala, ale wejdz w /check?key=START-YAGA"));
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Serwer ruszy"));
+app.listen(PORT, () => {
+    console.log("Serwer ruszył na porcie " + PORT);
+});
