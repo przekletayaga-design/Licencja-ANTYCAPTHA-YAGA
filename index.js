@@ -1,32 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+app.use(cors());
 
-// ODBLOKOWANIE WSZYSTKIEGO (Naprawia JSON ERR)
-app.use(cors({ origin: '*' }));
+// TA LINIA JEST KLUCZOWA - zabija stronę powitalną Rendera
+app.get('/', (req, res) => res.send({status: "OK", info: "YAGA LIVE"}));
 
-let licencje = { 
-    "START-YAGA": 1000,
-    "TEST-123": 500 
-};
+let licencje = { "START-YAGA": 1000 };
 
-// GŁÓWNA STRONA
-app.get('/', (req, res) => {
-    res.send("SERWER YAGA ONLINE");
-});
-
-// ŚCIEŻKA DLA BOTA
 app.get('/check', (req, res) => {
     const key = req.query.key;
-    if (licencje[key]) {
-        // Nie odejmujemy punktu przy samym sprawdzaniu stanu (żeby nie znikły przy odświeżaniu)
-        res.json({ status: "OK", remaining: licencje[key] });
-    } else {
-        res.status(404).json({ status: "ERROR", message: "Zly klucz" });
-    }
+    if (licencje[key]) res.json({ status: "OK", remaining: licencje[key] });
+    else res.json({ status: "ERROR" });
 });
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, "0.0.0.0", () => {
-    console.log("Serwer ruszył na porcie " + PORT);
-});
+app.listen(process.env.PORT || 3000);
