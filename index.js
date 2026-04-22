@@ -5,18 +5,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// TWOJA BAZA KLUCZY
+// TESTOWE POŁĄCZENIE (Główna strona)
+app.get('/', (req, res) => {
+    res.send("<h1>✅ Serwer YAGA Licencja działa!</h1><p>Użyj /check?key=KOD</p>");
+});
+
 let licencje = {
     "START-YAGA": 1000,
     "TEST-123": 500
 };
 
-// GŁÓWNA ŚCIEŻKA (żeby nie wywalało na stronę Rendera)
-app.get('/', (req, res) => {
-    res.send("Serwer YAGA działa! Użyj /check?key=TWOJ_KLUCZ");
-});
-
-// ŚCIEŻKA SPRAWDZANIA
 app.get('/check', (req, res) => {
     const key = req.query.key;
     if (licencje[key] && licencje[key] > 0) {
@@ -27,8 +25,5 @@ app.get('/check', (req, res) => {
     }
 });
 
-// PORT (Render sam go przypisuje)
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Serwer aktywny na porcie ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Serwer na porcie ${PORT}`));
